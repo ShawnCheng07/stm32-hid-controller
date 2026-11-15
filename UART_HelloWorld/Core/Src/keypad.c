@@ -23,3 +23,12 @@ static GPIO_TypeDef* col_ports[KEYPAD_COLS] = {
 static uint16_t col_pins[KEYPAD_COLS] = {
 		COL_1_Pin, COL_2_Pin, COL_3_Pin, COL_4_Pin
 };
+
+
+void Keypad_Init(void)
+{
+	for (int row = 0; row < KEYPAD_ROWS; ++row)
+	{
+		HAL_GPIO_WritePin(row_ports[row], row_pins[row], GPIO_PIN_RESET);
+	}
+}

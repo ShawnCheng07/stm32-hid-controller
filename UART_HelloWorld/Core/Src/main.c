@@ -18,10 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include "keypad.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +92,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  Keypad_Init();
   /* USER CODE END 2 */
 
   /* Initialize leds */
@@ -105,9 +105,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  char msg[] = "Hello World\r\n";
-	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-	  HAL_Delay(5000);
+
+	  char input_char = Keypad_Scan();
+	  if (input_char != '\0')
+	  {
+		  HAL_UART_Transmit(&huart2, (uint8_t*)&input_char, 1, HAL_MAX_DELAY);
+	  }
+	  HAL_Delay(5);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -226,7 +230,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : COL_1_Pin COL_2_Pin COL_3_Pin COL_4_Pin */
   GPIO_InitStruct.Pin = COL_1_Pin|COL_2_Pin|COL_3_Pin|COL_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
